@@ -15,10 +15,11 @@ class InfluxDBProxy
 
     r = JSON.parse(request.body.read)
     r.each do |x|
-      base_name = x['host'] + '.' + x['plugin']
-      base_name += '.' + x['plugin_instance'] unless x['plugin_instance'].empty?
-      base_name += '.' + x['type']
-      base_name += '.' + x['type_instance'] unless x['type_instance'].empty?
+      base_name = x['host']
+      base_name.prepend(x['plugin'] + '.')
+      base_name.prepend(x['plugin_instance'] + '.') unless x['plugin_instance'].empty?
+      base_name.prepend(x['type'] + '.')
+      base_name.prepend(x['type_instance'] + '.') unless x['type_instance'].empty?
 
       x['dstypes'].each_with_index do |type, i|
         unless type == 'counter' or type == 'gauge' or type == 'derive'
